@@ -11,7 +11,7 @@ import {
   NativeScrollEvent,
   NativeSyntheticEvent,
 } from "react-native";
-import { TabView, SceneMap } from "react-native-tab-view";
+import { TabView } from "react-native-tab-view";
 import { FlashList } from "@shopify/flash-list";
 import Post from "@/components/organisms/Post";
 import { Colors } from "@/constants/Colors";
@@ -56,7 +56,10 @@ const MemeTabView: React.FC<Props> = ({
       onEndReachedThreshold={0.1}
       ListFooterComponent={() =>
         loading && (
-          <ActivityIndicator color={Colors.tint} style={{ marginTop: 8 }} />
+          <ActivityIndicator
+            color={Colors.tint}
+            style={{ marginVertical: 6 }}
+          />
         )
       }
     />
@@ -89,16 +92,19 @@ const MemeTabView: React.FC<Props> = ({
     );
   };
 
-  const renderScene = SceneMap({
-    home: HomeRoute,
-    fresh: BlankRoute,
-    trending: BlankRoute,
-  });
-
   return (
     <TabView
       navigationState={{ index, routes }}
-      renderScene={renderScene}
+      renderScene={({ route }) => {
+        switch (route.key) {
+          case "home":
+            return HomeRoute();
+          case "fresh":
+            return BlankRoute();
+          case "trending":
+            return BlankRoute();
+        }
+      }}
       renderTabBar={renderTabBar}
       onIndexChange={setIndex}
       initialLayout={{ width: layout.width }}
